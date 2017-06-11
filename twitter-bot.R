@@ -1,0 +1,2 @@
+library(twitteR)
+library(ROAuth)
