@@ -30,3 +30,4 @@ View(spotify_top_songs)
  current_post <- str_c(sprintf("Spotify's Global Picks of the Day- %d : %s , %d : %s, %d : %s ", Rank1, Track1, Rank2, Track2, Rank3, Track3))
  
  tweet(current_post)
+
