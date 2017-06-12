@@ -29,9 +29,17 @@ spotify_link = read_html("https://spotifycharts.com/regional/global/daily/latest
 links <- data.frame(url = html_attr(spotify_link, name = "href"))
 spotify_top_songs = cbind(spotify_top_songs, links)
 spotify_top_songs %>% mutate_if(is.factor, as.character) -> spotify_top_songs
+View(spotify_top_songs)
+spotify_top_songs
 
 # Twitter Format: Top 3 streamed songs of the day??
+library(stringr)
+spotify_post_1<- str_c(sprintf("The 3rd most streamed song of the day is: %s with %s streams! URL: %s", spotify_top_songs$Track[3], spotify_top_songs$Streams[3], spotify_top_songs$url[3]))
+spotify_post_2<- str_c(sprintf("The 2nd most streamed song of the day is: %s with %s streams! URL: %s", spotify_top_songs$Track[2], spotify_top_songs$Streams[2], spotify_top_songs$url[2]))
+spotify_post_3 <- str_c(sprintf("The Top Song of the day is: %s with %s streams. URL: %s", spotify_top_songs$Track[1], spotify_top_songs$Streams[1], spotify_top_songs$url[1]))
+spotify_post_4 <- str_c(sprintf("Your Spotify Daily Top Streamed Songs for %s", as.character(Sys.Date())), ":")
 
-current_post_one <- str_c(sprintf("Spotify Global Top 3 Streams for ", as.character(Sys.Date(), ": " )))
- 
-tweet(current_post)
+tweet(spotify_post_1)
+tweet(spotify_post_2)
+tweet(spotify_post_3)
+tweet(spotify_post_4)
