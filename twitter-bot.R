@@ -18,7 +18,9 @@ spotify_top_songs$NA2 = NULL
 # Remove "\n" frome every Track
 spotify_top_songs = lapply(spotify_top_songs, function(x){ gsub("\n ", "", x)})
 
-# !!!!!      TODO: Get rid of whitespace in "Trackname"
+# Get rid of whitespace in "Trackname"
+
+spotify_top_songs = lapply(spotify_top_songs, function(x){ gsub("\\s+", " ", x)})
 
 # Failed Attempts to Remove WhiteSpaces
 # Spotify_top_songs$Track = lapply(spotify_top_songs$Track, function(x){ gsub("                                       ", "", x)})
@@ -29,7 +31,9 @@ spotify_link = read_html("https://spotifycharts.com/regional/global/daily/latest
   html_nodes(xpath = '//*[@id="content"]/div/div/div/span/table/tbody/tr/td[1]/a')
  
 links <- data.frame(url = html_attr(spotify_link, name = "href"))
- 
+
+
+
 spotify_top_songs = cbind(spotify_top_songs, links)
  
 # Twitter Format: Top 3 streamed songs of the day??
