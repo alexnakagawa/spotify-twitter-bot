@@ -35,6 +35,15 @@ links <- data.frame(url = html_attr(spotify_link, name = "href"))
 
 
 spotify_top_songs = cbind(spotify_top_songs, links)
+spotify_top_songs = merge(spotify_top_songs, links)
+
+View(spotify_top_songs)
+class(spotify_top_songs$Track[1])
+class()
+
+library(dplyr)
+spotify_top_songs %>% mutate_if(is.factor, as.character) -> spotify_top_songs
+class(spotify_top_songs$Track[1])
  
 # Twitter Format: Top 3 streamed songs of the day??
  
