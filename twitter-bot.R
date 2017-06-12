@@ -2,42 +2,38 @@ library(twitteR)
 library(ROAuth)
 library(dplyr)
 library(rvest)
+library(magrittr)
 
-#WebScrappe Spotify Top Songs from Sotifycharts.com
+# Web Scrape Spotify Top Songs from Sotifycharts.com
 spotify_top_songs <- read_html("https://spotifycharts.com/regional/global/daily/latest") %>%
   html_node("#content > div > div > div > span > table") %>% html_table(trim = TRUE)
 
-
-#Add Column Names to the spotify_top_songs    
+# Add Column Names to the spotify_top_songs    
 colnames(spotify_top_songs) = c("NA1","Rank","NA2","Track","Streams")
 
-#Remove Empty Columns
+# Remove empty columns
 spotify_top_songs$NA1 = NULL
 spotify_top_songs$NA2 = NULL
 
-#Remove "\n" frome every Track
+# Remove "\n" frome every Track
 spotify_top_songs = lapply(spotify_top_songs, function(x){ gsub("\n ", "", x)})
 
-#Failed Attempts to Remove WhiteSpaces
-#spotify_top_songs$Track = lapply(spotify_top_songs$Track, function(x){ gsub("                                       ", "", x)})
+# !!!!!      TODO: Get rid of whitespace in "Trackname"
 
- #get rid of whitespace in "Trackname"
+# Failed Attempts to Remove WhiteSpaces
+# Spotify_top_songs$Track = lapply(spotify_top_songs$Track, function(x){ gsub("                                       ", "", x)})
 
- #add links to table
+# Add links to table
  
- spotify = read_html("https://spotifycharts.com/regional/global/daily/latest")
-
+spotify_link = read_html("https://spotifycharts.com/regional/global/daily/latest") %>%
+  html_nodes(xpath = '//*[@id="content"]/div/div/div/span/table/tbody/tr/td[1]/a')
  
- spotify_link <- html_nodes(spotify, xpath = '//*[@id="content"]/div/div/div/span/table/tbody/tr/td[1]/a')
+links <- data.frame(url = html_attr(spotify_link, name = "href"))
  
- links<- data.frame(url = html_attr(spotify_link, name = "href"))
+spotify_top_songs = cbind(spotify_top_songs, links)
  
- spotify_songs = cbind(spotify_top_songs, links)
+# Twitter Format: Top 3 streamed songs of the day??
  
-#Twitter \stuff
+current_post_one <- str_c(sprintf("Spotify Global Top 3 Streams for ", as.character(Sys.Date(), ": " )))
  
-  current_post <- str_c(sprintf("Spotify's Global Picks of the Day- %d : %s , %d : %s, %d : %s ", Rank1, Track1, Rank2, Track2, Rank3, Track3))
- 
- tweet(current_post)
- 
- #-----------------
+tweet(current_post)
